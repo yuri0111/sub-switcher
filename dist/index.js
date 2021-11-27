@@ -38,7 +38,7 @@ function hideSubsHistory() {
 function showSubsHistory() {
     if (init) {
         let newElForSub = getSubHistoryBlock();
-        newElForSub.replaceChildren();
+        newElForSub.childNodes.forEach(n => n.remove());
         let index = 0;
         for (const lastSub of subsHistory) {
             let span = spanForHistory.cloneNode(false);

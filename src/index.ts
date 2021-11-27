@@ -1,12 +1,12 @@
 let observerInit = false;
-let lastSubText = null;
-let subsHistory = [];
+let lastSubText: string | undefined = undefined;
+let subsHistory: string[] = [];
 
 let subIsOpen = false;
 let subsHistoryIsOpen = false;
 
 let init = false;
-let spanForHistory = null;
+let spanForHistory: HTMLInputElement;
 
 document.onkeydown = function (e) {
     const key = e.key;
@@ -25,7 +25,12 @@ document.onkeydown = function (e) {
 _waitForCondition(hasSubBlock).then(() => {
     runObserver();
     addDivForSubsHistory();
-    spanForHistory = getLastBlock().firstChild.cloneNode(false);
+
+    const firstChild = getLastBlock().firstChild;
+
+    if (firstChild) {
+        spanForHistory = firstChild.cloneNode(false) as HTMLInputElement;
+    }
     init = true;
 });
 
@@ -48,12 +53,12 @@ function hideSubsHistory() {
 function showSubsHistory() {
     if (init) {
         let newElForSub = getSubHistoryBlock();
-        newElForSub.replaceChildren();
+        newElForSub.childNodes.forEach(n => n.remove());
 
         let index = 0;
 
         for (const lastSub of subsHistory) {
-            let span = spanForHistory.cloneNode(false);
+            let span = spanForHistory.cloneNode(false) as HTMLInputElement;
             span.innerHTML = index === 0 ? lastSub : '<br>' + lastSub;
             newElForSub.appendChild(span);
             index++;
@@ -71,7 +76,7 @@ function addDivForSubsHistory() {
 
     newElForSub.style.zIndex = '9999';
     newElForSub.classList.add('div-for-subs');
-    document.getElementById('oframecdnplayer').prepend(newElForSub);
+    document.getElementById('oframecdnplayer')?.prepend(newElForSub);
 }
 
 function runObserver() {
@@ -81,10 +86,12 @@ function runObserver() {
 
     observerInit = true;
 
-    const callback = function (mutationsList) {
+    const callback = function (mutationsList: MutationRecord[]) {
         for (let mutation of mutationsList) {
-            if (mutation.type === 'childList' && mutation.removedNodes[0]) {
-                let text = mutation.removedNodes[0].innerHTML.replace('<br>', ' ');
+            const removedNodes = mutation.removedNodes[0] as HTMLInputElement;
+
+            if (mutation.type === 'childList' && removedNodes) {
+                let text = removedNodes.innerHTML.replace('<br>', ' ');
                 if (text !== lastSubText) {
                     lastSubText = text;
                     subsHistory.push(lastSubText);
@@ -104,20 +111,30 @@ function runObserver() {
     });
 }
 
-function hasSubBlock() {
-    return getLastBlock().firstChild && getLastBlock().firstChild.nodeName === 'SPAN';
+function hasSubBlock(): boolean {
+    return !!getLastBlock().firstChild && getLastBlock().firstChild?.nodeName === 'SPAN';
 }
 
 function getSubHistoryBlock(): HTMLInputElement {
-    return document.querySelector<HTMLInputElement>('#oframecdnplayer .div-for-subs');
+    const res = document.querySelector<HTMLInputElement>('#oframecdnplayer .div-for-subs');
+
+    if (!res) {
+        throw new Error(' no result for getSubHistoryBlock');
+    }
+    return res;
 }
 
 function getLastBlock(): HTMLInputElement {
     // noinspection CssInvalidHtmlTagReference
-    return document.querySelector<HTMLInputElement>('#oframecdnplayer > pjsdiv:last-child');
+    const res = document.querySelector<HTMLInputElement>('#oframecdnplayer > pjsdiv:last-child');
+
+    if (!res) {
+        throw new Error(' no result for getSubHistoryBlock');
+    }
+    return res;
 }
 
-function _waitForCondition(conditionCallback, delay = 500) {
+function _waitForCondition(conditionCallback: () => {}, delay = 500): Promise<any> {
     function _search() {
         return new Promise((resolve) => {
             setTimeout(resolve, delay);
