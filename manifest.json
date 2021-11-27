@@ -1,0 +1,20 @@
+{
+  "description": "Adds the ability to show, hide subtitles by pressing 'c' key. Additional you can show, hide sub history by pressing 'v' key",
+  "manifest_version": 2,
+  "name": "Sub switcher",
+  "version": "1.0",
+  "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/borderify",
+  "icons": {
+    "48": "icons/subtitles.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://rezka.ag/*"
+      ],
+      "js": [
+        "index.js"
+      ]
+    }
+  ]
+}
