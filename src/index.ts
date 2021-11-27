@@ -31,18 +31,18 @@ _waitForCondition(hasSubBlock).then(() => {
 
 function showSub() {
     if (hasSubBlock()) {
-        getLastBlock().style.opacity = 1;
+        getLastBlock().style.opacity = '1';
     }
 }
 
 function hideSub() {
     if (hasSubBlock()) {
-        getLastBlock().style.opacity = 0;
+        getLastBlock().style.opacity = '0';
     }
 }
 
 function hideSubsHistory() {
-    getSubHistoryBlock().style.opacity = 0;
+    getSubHistoryBlock().style.opacity = '0';
 }
 
 function showSubsHistory() {
@@ -58,7 +58,7 @@ function showSubsHistory() {
             newElForSub.appendChild(span);
             index++;
         }
-        newElForSub.style.opacity = 1;
+        newElForSub.style.opacity = '1';
     }
 }
 
@@ -67,9 +67,9 @@ function addDivForSubsHistory() {
         return;
     }
 
-    let newElForSub = getLastBlock().cloneNode(false);
+    let newElForSub: HTMLInputElement = getLastBlock().cloneNode(false) as HTMLInputElement;
 
-    newElForSub.style.zIndex = 9999;
+    newElForSub.style.zIndex = '9999';
     newElForSub.classList.add('div-for-subs');
     document.getElementById('oframecdnplayer').prepend(newElForSub);
 }
@@ -108,13 +108,13 @@ function hasSubBlock() {
     return getLastBlock().firstChild && getLastBlock().firstChild.nodeName === 'SPAN';
 }
 
-function getSubHistoryBlock() {
-    return document.querySelector('#oframecdnplayer .div-for-subs');
+function getSubHistoryBlock(): HTMLInputElement {
+    return document.querySelector<HTMLInputElement>('#oframecdnplayer .div-for-subs');
 }
 
-function getLastBlock() {
+function getLastBlock(): HTMLInputElement {
     // noinspection CssInvalidHtmlTagReference
-    return document.querySelector('#oframecdnplayer > pjsdiv:last-child');
+    return document.querySelector<HTMLInputElement>('#oframecdnplayer > pjsdiv:last-child');
 }
 
 function _waitForCondition(conditionCallback, delay = 500) {

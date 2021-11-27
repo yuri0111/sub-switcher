@@ -1,0 +1,19 @@
+{
+  "name": "first-node-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc && node dist/index.js",
+    "start": "tsc -w & nodemon -q -w dist dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "@types/node": "^16.11.7"
+  }
+}

@@ -3,7 +3,7 @@
   "manifest_version": 2,
   "name": "Sub switcher",
   "version": "1.0",
-  "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/borderify",
+  "homepage_url": "https://www.netflix.com/",
   "icons": {
     "48": "icons/subtitles.png"
   },
@@ -13,7 +13,7 @@
         "*://rezka.ag/*"
       ],
       "js": [
-        "index.js"
+        "dist/index.js"
       ]
     }
   ]
