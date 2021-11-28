@@ -10,6 +10,12 @@ export default class SubtitleService {
     constructor(htmlManager: HtmlManagerI) {
         this.htmlManager = htmlManager;
         this.spanForHistory = htmlManager.getBlockWithSubChild().cloneNode(false) as HTMLInputElement;
+        this.init();
+    }
+
+    init() {
+        this.htmlManager.addDivForSubsHistory();
+        this.runObserver();
     }
 
 
@@ -30,7 +36,6 @@ export default class SubtitleService {
         newElForSub.childNodes.forEach(n => n.remove());
 
         let index = 0;
-
         for (const lastSub of this.subsHistory) {
             let span = this.spanForHistory.cloneNode(false) as HTMLInputElement;
             span.innerHTML = index === 0 ? lastSub : '<br>' + lastSub;
@@ -47,6 +52,7 @@ export default class SubtitleService {
 
                 if (mutation.type === 'childList' && removedNodes) {
                     let text = removedNodes.innerHTML.replace('<br>', ' ');
+
                     if (text !== this.lastSubText) {
                         this.lastSubText = text;
                         this.subsHistory.push(this.lastSubText);

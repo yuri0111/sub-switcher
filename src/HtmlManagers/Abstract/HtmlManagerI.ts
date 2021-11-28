@@ -5,5 +5,5 @@ export default interface HtmlManagerI {
 
     getBlockWithSubChild(): HTMLInputElement;
 
-    addDivForSubsHistory(newElForSub: HTMLInputElement): HTMLInputElement;
+    addDivForSubsHistory(): HTMLInputElement;
 }

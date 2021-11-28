@@ -1,13 +1,14 @@
 import SubtitleService from "./SubtitleService";
 import HtmlManagerRezka from "./HtmlManagers/HtmlManagerRezka";
 import HtmlManagerI from "./HtmlManagers/Abstract/HtmlManagerI";
+import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
 
 let subIsOpen = false;
 let subsHistoryIsOpen = false;
 
-const htmlManagerName: string = 'HtmlManagerRezka';
-
 let subtitleService: SubtitleService|undefined;
+
+const manager: typeof HtmlManagerAbstract = HtmlManagerRezka;
 
 document.onkeydown = function (e) {
     if(!subtitleService) {
@@ -27,8 +28,9 @@ document.onkeydown = function (e) {
     }
 }
 
-_waitForCondition(eval(`${htmlManagerName}.hasSubBlock()`)).then(() => {
-    const htmlManager: HtmlManagerI = eval(`new ${htmlManagerName}()`);
+_waitForCondition(manager.hasSubBlock).then(() => {
+    // @ts-ignore
+    const htmlManager: HtmlManagerI = new manager();
     subtitleService = new SubtitleService(htmlManager);
 });
 
