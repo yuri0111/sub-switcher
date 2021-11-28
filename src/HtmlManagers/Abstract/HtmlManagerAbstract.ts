@@ -8,7 +8,7 @@ export default abstract class HtmlManagerAbstract implements HtmlManagerI {
 
     abstract getBlockWithSub(): HTMLInputElement;
 
-    abstract getBlockWithSubChild(): HTMLInputElement;
+    abstract getSpanForHistory(): HTMLInputElement;
 
     abstract addDivForSubsHistory(): HTMLInputElement;
 }

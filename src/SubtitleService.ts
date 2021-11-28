@@ -9,7 +9,7 @@ export default class SubtitleService {
 
     constructor(htmlManager: HtmlManagerI) {
         this.htmlManager = htmlManager;
-        this.spanForHistory = htmlManager.getBlockWithSubChild().cloneNode(false) as HTMLInputElement;
+        this.spanForHistory = htmlManager.getSpanForHistory();
         this.init();
     }
 

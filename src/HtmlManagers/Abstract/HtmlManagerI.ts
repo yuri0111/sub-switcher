@@ -3,7 +3,7 @@ export default interface HtmlManagerI {
 
     getBlockWithSub(): HTMLInputElement;
 
-    getBlockWithSubChild(): HTMLInputElement;
+    getSpanForHistory(): HTMLInputElement;
 
     addDivForSubsHistory(): HTMLInputElement;
 }

@@ -27,14 +27,14 @@ export default class HtmlManagerRezka implements HtmlManagerAbstract {
         return res;
     }
 
-    getBlockWithSubChild(): HTMLInputElement {
+    getSpanForHistory(): HTMLInputElement {
         // noinspection CssInvalidHtmlTagReference
         const res = this.getBlockWithSub().firstChild as HTMLInputElement;
 
         if (!res) {
             throw new Error(' no result for getBlockWithSub');
         }
-        return res;
+        return res.cloneNode(false) as HTMLInputElement;
     }
 
     getSubHistoryBlock(): HTMLInputElement {
