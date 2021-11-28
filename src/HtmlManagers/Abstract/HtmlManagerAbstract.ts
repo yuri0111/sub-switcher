@@ -10,5 +10,5 @@ export default abstract class HtmlManagerAbstract implements HtmlManagerI {
 
     abstract getBlockWithSubChild(): HTMLInputElement;
 
-    abstract addDivForSubsHistory(newElForSub: HTMLInputElement): HTMLInputElement;
+    abstract addDivForSubsHistory(): HTMLInputElement;
 }
