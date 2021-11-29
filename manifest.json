@@ -10,7 +10,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://rezka.ag/*"
+        "*://rezka.ag/*",
+        "*://www.netflix.com/*"
       ],
       "js": [
         "dist/index.js"

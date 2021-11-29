@@ -6,4 +6,6 @@ export default interface HtmlManagerI {
     getSpanForHistory(): HTMLInputElement;
 
     addDivForSubsHistory(): HTMLInputElement;
+
+    parseSubs(el: HTMLInputElement): string;
 }

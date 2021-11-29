@@ -45,4 +45,8 @@ export default class HtmlManagerRezka implements HtmlManagerAbstract {
         }
         return res;
     }
+
+    parseSubs(el: HTMLInputElement): string {
+        return el.innerHTML.replace('<br>', ' ');
+    }
 }

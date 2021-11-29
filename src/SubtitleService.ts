@@ -51,7 +51,7 @@ export default class SubtitleService {
                 const removedNodes = mutation.removedNodes[0] as HTMLInputElement;
 
                 if (mutation.type === 'childList' && removedNodes) {
-                    let text = removedNodes.innerHTML.replace('<br>', ' ');
+                    let text = this.htmlManager.parseSubs(removedNodes);
 
                     if (text !== this.lastSubText) {
                         this.lastSubText = text;
@@ -66,6 +66,7 @@ export default class SubtitleService {
         };
 
         const observer = new MutationObserver(callback);
+
         observer.observe(this.htmlManager.getBlockWithSub(), {
             childList: true,
             subtree: true

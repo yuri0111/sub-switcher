@@ -2,16 +2,26 @@ import SubtitleService from "./SubtitleService";
 import HtmlManagerRezka from "./HtmlManagers/HtmlManagerRezka";
 import HtmlManagerI from "./HtmlManagers/Abstract/HtmlManagerI";
 import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
+import HtmlManagerNetflix from "./HtmlManagers/HtmlManagerNetflix";
 
 let subIsOpen = false;
 let subsHistoryIsOpen = false;
 
-let subtitleService: SubtitleService|undefined;
+let subtitleService: SubtitleService | undefined;
 
-const manager: typeof HtmlManagerAbstract = HtmlManagerRezka;
+const manager: typeof HtmlManagerAbstract = (() => {
+    switch (window.location.host) {
+        case 'rezka.ag' :
+            return HtmlManagerRezka;
+        case 'www.netflix.com' :
+            return HtmlManagerNetflix;
+        default:
+            return HtmlManagerRezka;
+    }
+})();
 
 document.onkeydown = function (e) {
-    if(!subtitleService) {
+    if (!subtitleService) {
         return;
     }
 

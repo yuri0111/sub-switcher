@@ -11,4 +11,6 @@ export default abstract class HtmlManagerAbstract implements HtmlManagerI {
     abstract getSpanForHistory(): HTMLInputElement;
 
     abstract addDivForSubsHistory(): HTMLInputElement;
+
+    abstract parseSubs(el: HTMLInputElement): string;
 }
