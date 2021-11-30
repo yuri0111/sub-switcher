@@ -2,6 +2,7 @@ import HtmlManagerAbstract from "./Abstract/HtmlManagerAbstract";
 
 export default class HtmlManagerRezka implements HtmlManagerAbstract {
     static blockWithSubSelector = '#oframecdnplayer > pjsdiv:last-child';
+    static blockWithSubHistorySelector = '#oframecdnplayer .div-for-subs';
 
     static hasSubBlock(): boolean {
         const el = document.querySelector<HTMLInputElement>(HtmlManagerRezka.blockWithSubSelector);
@@ -38,7 +39,7 @@ export default class HtmlManagerRezka implements HtmlManagerAbstract {
     }
 
     getSubHistoryBlock(): HTMLInputElement {
-        const res = document.querySelector<HTMLInputElement>('#oframecdnplayer .div-for-subs');
+        const res = document.querySelector<HTMLInputElement>(HtmlManagerRezka.blockWithSubHistorySelector);
 
         if (!res) {
             throw new Error(' no result for getSubHistoryBlock');

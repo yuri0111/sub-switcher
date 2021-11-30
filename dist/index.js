@@ -155,17 +155,28 @@ var SubtitleService = /*#__PURE__*/function () {
   }, {
     key: "showSub",
     value: function showSub() {
-      this.htmlManager.getBlockWithSub().style.opacity = '1';
+      var selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubSelector;
+      var style = "".concat(selector, "{display: inherit!important;}");
+
+      this._addStyle(style, 'sub');
+
+      this.hideSubsHistory();
     }
   }, {
     key: "hideSub",
     value: function hideSub() {
-      this.htmlManager.getBlockWithSub().style.opacity = '0';
+      var selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubSelector;
+      var style = "".concat(selector, "{display: none!important;}");
+
+      this._addStyle(style, 'sub');
     }
   }, {
     key: "hideSubsHistory",
     value: function hideSubsHistory() {
-      this.htmlManager.getSubHistoryBlock().style.opacity = '0';
+      var selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
+      var style = "".concat(selector, "{display: none!important;}");
+
+      this._addStyle(style, 'sub-history');
     }
   }, {
     key: "showSubsHistory",
@@ -193,7 +204,12 @@ var SubtitleService = /*#__PURE__*/function () {
         _iterator.f();
       }
 
-      newElForSub.style.opacity = '1';
+      var selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
+      var style = "".concat(selector, "{display: inherit!important;}");
+
+      this._addStyle(style, 'sub-history');
+
+      this.hideSub();
     }
   }, {
     key: "runObserver",
@@ -235,6 +251,28 @@ var SubtitleService = /*#__PURE__*/function () {
         childList: true,
         subtree: true
       });
+    }
+  }, {
+    key: "_addStyle",
+    value: function _addStyle(style, name) {
+      var override = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      var dataAttrName = "data-subtitle-manager-".concat(name);
+      var css = document.querySelector("style[".concat(dataAttrName, "='style']"));
+
+      if (!css) {
+        css = document.createElement('style');
+      }
+
+      css.setAttribute(dataAttrName, 'style');
+      css.setAttribute('type', 'text/css');
+
+      if (override) {
+        css.innerHTML = style;
+      } else {
+        css.innerHTML += style;
+      }
+
+      document.getElementsByTagName("head")[0].appendChild(css);
     }
   }]);
 
@@ -298,7 +336,7 @@ var HtmlManagerRezka = /*#__PURE__*/function () {
   }, {
     key: "getSubHistoryBlock",
     value: function getSubHistoryBlock() {
-      var res = document.querySelector('#oframecdnplayer .div-for-subs');
+      var res = document.querySelector(HtmlManagerRezka.blockWithSubHistorySelector);
 
       if (!res) {
         throw new Error(' no result for getSubHistoryBlock');
@@ -326,6 +364,7 @@ var HtmlManagerRezka = /*#__PURE__*/function () {
 
 exports.default = HtmlManagerRezka;
 HtmlManagerRezka.blockWithSubSelector = '#oframecdnplayer > pjsdiv:last-child';
+HtmlManagerRezka.blockWithSubHistorySelector = '#oframecdnplayer .div-for-subs';
 },{}],"HtmlManagers/HtmlManagerNetflix.ts":[function(require,module,exports) {
 "use strict";
 
@@ -385,7 +424,7 @@ var HtmlManagerNetflix = /*#__PURE__*/function () {
   }, {
     key: "getSubHistoryBlock",
     value: function getSubHistoryBlock() {
-      var res = document.querySelector('.div-for-subs');
+      var res = document.querySelector(HtmlManagerNetflix.blockWithSubHistorySelector);
 
       if (!res) {
         throw new Error(' no result for getSubHistoryBlock');
@@ -417,6 +456,7 @@ var HtmlManagerNetflix = /*#__PURE__*/function () {
 
 exports.default = HtmlManagerNetflix;
 HtmlManagerNetflix.blockWithSubSelector = '.player-timedtext';
+HtmlManagerNetflix.blockWithSubHistorySelector = '.div-for-subs';
 },{}],"index.ts":[function(require,module,exports) {
 "use strict";
 
@@ -522,7 +562,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55865" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64313" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

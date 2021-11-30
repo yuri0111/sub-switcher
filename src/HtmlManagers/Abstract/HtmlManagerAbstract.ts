@@ -3,6 +3,7 @@ import HtmlManagerI from "./HtmlManagerI";
 export default abstract class HtmlManagerAbstract implements HtmlManagerI {
     static hasSubBlock: () => boolean;
     static blockWithSubSelector: string;
+    static blockWithSubHistorySelector: string;
 
     abstract getSubHistoryBlock(): HTMLInputElement;
 

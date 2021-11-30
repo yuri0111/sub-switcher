@@ -2,6 +2,7 @@ import HtmlManagerAbstract from "./Abstract/HtmlManagerAbstract";
 
 export default class HtmlManagerNetflix implements HtmlManagerAbstract {
     static blockWithSubSelector = '.player-timedtext';
+    static blockWithSubHistorySelector = '.div-for-subs';
 
     static hasSubBlock(): boolean {
         const el = document.querySelector<HTMLInputElement>(HtmlManagerNetflix.blockWithSubSelector);
@@ -39,7 +40,7 @@ export default class HtmlManagerNetflix implements HtmlManagerAbstract {
     }
 
     getSubHistoryBlock(): HTMLInputElement {
-        const res = document.querySelector<HTMLInputElement>('.div-for-subs');
+        const res = document.querySelector<HTMLInputElement>(HtmlManagerNetflix.blockWithSubHistorySelector);
 
         if (!res) {
             throw new Error(' no result for getSubHistoryBlock');

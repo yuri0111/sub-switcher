@@ -1,11 +1,12 @@
 import HtmlManagerI from "./HtmlManagers/Abstract/HtmlManagerI";
+import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
 
 export default class SubtitleService {
     lastSubText?: string;
     subsHistory: string[] = [];
     spanForHistory: HTMLInputElement;
 
-    htmlManager: HtmlManagerI;
+    htmlManager: HtmlManagerAbstract;
 
     constructor(htmlManager: HtmlManagerI) {
         this.htmlManager = htmlManager;
@@ -20,15 +21,23 @@ export default class SubtitleService {
 
 
     showSub() {
-        this.htmlManager.getBlockWithSub().style.opacity = '1';
+        const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubSelector;
+        const style = `${selector}{display: inherit!important;}`
+        this._addStyle(style, 'sub');
+
+        this.hideSubsHistory();
     }
 
     hideSub() {
-        this.htmlManager.getBlockWithSub().style.opacity = '0';
+        const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubSelector;
+        const style = `${selector}{display: none!important;}`
+        this._addStyle(style, 'sub');
     }
 
     hideSubsHistory() {
-        this.htmlManager.getSubHistoryBlock().style.opacity = '0';
+        const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
+        const style = `${selector}{display: none!important;}`
+        this._addStyle(style, 'sub-history');
     }
 
     showSubsHistory() {
@@ -42,7 +51,12 @@ export default class SubtitleService {
             newElForSub.appendChild(span);
             index++;
         }
-        newElForSub.style.opacity = '1';
+
+        const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
+        const style = `${selector}{display: inherit!important;}`
+        this._addStyle(style, 'sub-history');
+
+        this.hideSub();
     }
 
     runObserver() {
@@ -71,5 +85,25 @@ export default class SubtitleService {
             childList: true,
             subtree: true
         });
+    }
+
+    _addStyle(style: string, name: string, override: boolean = true) {
+        const dataAttrName = `data-subtitle-manager-${name}`;
+
+        let css = document.querySelector<HTMLElement>(`style[${dataAttrName}='style']`);
+        if (!css) {
+            css = document.createElement('style');
+        }
+
+        css.setAttribute(dataAttrName, 'style');
+        css.setAttribute('type', 'text/css');
+
+        if (override) {
+            css.innerHTML = style;
+        } else {
+            css.innerHTML += style;
+        }
+
+        document.getElementsByTagName("head")[0].appendChild(css);
     }
 }
