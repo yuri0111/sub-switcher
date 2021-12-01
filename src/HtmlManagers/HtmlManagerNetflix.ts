@@ -1,12 +1,16 @@
 import HtmlManagerAbstract from "./Abstract/HtmlManagerAbstract";
 
 export default class HtmlManagerNetflix implements HtmlManagerAbstract {
+
     static blockWithSubSelector = '.player-timedtext';
     static blockWithSubHistorySelector = '.div-for-subs';
 
     static hasSubBlock(): boolean {
         const el = document.querySelector<HTMLInputElement>(HtmlManagerNetflix.blockWithSubSelector);
         return !!el && !!el.firstChild;
+    }
+
+    beforeInit(): void {
     }
 
     addDivForSubsHistory(): HTMLInputElement {

@@ -1,9 +1,10 @@
-import HtmlManagerI from "./HtmlManagerI";
 
-export default abstract class HtmlManagerAbstract implements HtmlManagerI {
+export default abstract class HtmlManagerAbstract{
     static hasSubBlock: () => boolean;
     static blockWithSubSelector: string;
     static blockWithSubHistorySelector: string;
+
+    abstract beforeInit(): void;
 
     abstract getSubHistoryBlock(): HTMLInputElement;
 
