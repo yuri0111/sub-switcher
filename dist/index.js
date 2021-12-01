@@ -140,6 +140,8 @@ var SubtitleService = /*#__PURE__*/function () {
   function SubtitleService(htmlManager) {
     _classCallCheck(this, SubtitleService);
 
+    this.subIsOpen = false;
+    this.subsHistoryIsOpen = false;
     this.subsHistory = [];
     this.htmlManager = htmlManager;
     this.spanForHistory = htmlManager.getSpanForHistory();
@@ -150,7 +152,18 @@ var SubtitleService = /*#__PURE__*/function () {
     key: "init",
     value: function init() {
       this.htmlManager.addDivForSubsHistory();
-      this.runObserver();
+
+      this._runObserver();
+    }
+  }, {
+    key: "toggleSub",
+    value: function toggleSub() {
+      this.subIsOpen ? this.hideSub() : this.showSub();
+    }
+  }, {
+    key: "toggleSubHistory",
+    value: function toggleSubHistory() {
+      this.subsHistoryIsOpen ? this.hideSubsHistory() : this.showSubsHistory();
     }
   }, {
     key: "showSub",
@@ -160,6 +173,7 @@ var SubtitleService = /*#__PURE__*/function () {
 
       this._addStyle(style, 'sub');
 
+      this.subIsOpen = true;
       this.hideSubsHistory();
     }
   }, {
@@ -169,6 +183,19 @@ var SubtitleService = /*#__PURE__*/function () {
       var style = "".concat(selector, "{display: none!important;}");
 
       this._addStyle(style, 'sub');
+
+      this.subIsOpen = false;
+    }
+  }, {
+    key: "showSubsHistory",
+    value: function showSubsHistory() {
+      var selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
+      var style = "".concat(selector, "{display: inherit!important;}");
+
+      this._addStyle(style, 'sub-history');
+
+      this.subsHistoryIsOpen = true;
+      this.hideSub();
     }
   }, {
     key: "hideSubsHistory",
@@ -177,52 +204,21 @@ var SubtitleService = /*#__PURE__*/function () {
       var style = "".concat(selector, "{display: none!important;}");
 
       this._addStyle(style, 'sub-history');
+
+      this.subsHistoryIsOpen = false;
     }
   }, {
-    key: "showSubsHistory",
-    value: function showSubsHistory() {
-      var newElForSub = this.htmlManager.getSubHistoryBlock();
-      newElForSub.childNodes.forEach(function (n) {
-        return n.remove();
-      });
-      var index = 0;
-
-      var _iterator = _createForOfIteratorHelper(this.subsHistory),
-          _step;
-
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var lastSub = _step.value;
-          var span = this.spanForHistory.cloneNode(false);
-          span.innerHTML = index === 0 ? lastSub : '<br>' + lastSub;
-          newElForSub.appendChild(span);
-          index++;
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-
-      var selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
-      var style = "".concat(selector, "{display: inherit!important;}");
-
-      this._addStyle(style, 'sub-history');
-
-      this.hideSub();
-    }
-  }, {
-    key: "runObserver",
-    value: function runObserver() {
+    key: "_runObserver",
+    value: function _runObserver() {
       var _this = this;
 
       var callback = function callback(mutationsList) {
-        var _iterator2 = _createForOfIteratorHelper(mutationsList),
-            _step2;
+        var _iterator = _createForOfIteratorHelper(mutationsList),
+            _step;
 
         try {
-          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-            var mutation = _step2.value;
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var mutation = _step.value;
             var removedNodes = mutation.removedNodes[0];
 
             if (mutation.type === 'childList' && removedNodes) {
@@ -236,13 +232,15 @@ var SubtitleService = /*#__PURE__*/function () {
                 if (_this.subsHistory.length > 4) {
                   _this.subsHistory = _this.subsHistory.slice(1, 5);
                 }
+
+                _this._renderHistory();
               }
             }
           }
         } catch (err) {
-          _iterator2.e(err);
+          _iterator.e(err);
         } finally {
-          _iterator2.f();
+          _iterator.f();
         }
       };
 
@@ -251,6 +249,32 @@ var SubtitleService = /*#__PURE__*/function () {
         childList: true,
         subtree: true
       });
+    }
+  }, {
+    key: "_renderHistory",
+    value: function _renderHistory() {
+      var newElForSub = this.htmlManager.getSubHistoryBlock();
+      newElForSub.childNodes.forEach(function (n) {
+        return n.remove();
+      });
+      var index = 0;
+
+      var _iterator2 = _createForOfIteratorHelper(this.subsHistory),
+          _step2;
+
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var lastSub = _step2.value;
+          var span = this.spanForHistory.cloneNode(false);
+          span.innerHTML = index === 0 ? lastSub : '<br>' + lastSub;
+          newElForSub.appendChild(span);
+          index++;
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
     }
   }, {
     key: "_addStyle",
@@ -476,8 +500,6 @@ var HtmlManagerRezka_1 = __importDefault(require("./HtmlManagers/HtmlManagerRezk
 
 var HtmlManagerNetflix_1 = __importDefault(require("./HtmlManagers/HtmlManagerNetflix"));
 
-var subIsOpen = false;
-var subsHistoryIsOpen = false;
 var subtitleService;
 
 var manager = function () {
@@ -501,13 +523,11 @@ document.onkeydown = function (e) {
   var key = e.key;
 
   if (key === 'c') {
-    subIsOpen = !subIsOpen;
-    !subIsOpen ? subtitleService.showSub() : subtitleService.hideSub();
+    subtitleService.toggleSub();
   }
 
   if (key === 'v') {
-    subsHistoryIsOpen = !subsHistoryIsOpen;
-    !subsHistoryIsOpen ? subtitleService.showSubsHistory() : subtitleService.hideSubsHistory();
+    subtitleService.toggleSubHistory();
   }
 };
 
@@ -562,7 +582,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64313" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63447" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

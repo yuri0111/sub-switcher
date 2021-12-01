@@ -4,9 +4,6 @@ import HtmlManagerI from "./HtmlManagers/Abstract/HtmlManagerI";
 import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
 import HtmlManagerNetflix from "./HtmlManagers/HtmlManagerNetflix";
 
-let subIsOpen = false;
-let subsHistoryIsOpen = false;
-
 let subtitleService: SubtitleService | undefined;
 
 const manager: typeof HtmlManagerAbstract = (() => {
@@ -28,13 +25,11 @@ document.onkeydown = function (e) {
     const key = e.key;
 
     if (key === 'c') {
-        subIsOpen = !subIsOpen;
-        !subIsOpen ? subtitleService.showSub() : subtitleService.hideSub();
+        subtitleService.toggleSub();
     }
 
     if (key === 'v') {
-        subsHistoryIsOpen = !subsHistoryIsOpen;
-        !subsHistoryIsOpen ? subtitleService.showSubsHistory() : subtitleService.hideSubsHistory();
+        subtitleService.toggleSubHistory();
     }
 }
 

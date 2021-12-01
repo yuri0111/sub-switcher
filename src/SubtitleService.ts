@@ -2,6 +2,9 @@ import HtmlManagerI from "./HtmlManagers/Abstract/HtmlManagerI";
 import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
 
 export default class SubtitleService {
+    subIsOpen: boolean = false;
+    subsHistoryIsOpen: boolean = false;
+
     lastSubText?: string;
     subsHistory: string[] = [];
     spanForHistory: HTMLInputElement;
@@ -16,7 +19,15 @@ export default class SubtitleService {
 
     init() {
         this.htmlManager.addDivForSubsHistory();
-        this.runObserver();
+        this._runObserver();
+    }
+
+    toggleSub(): void {
+        this.subIsOpen ? this.hideSub() : this.showSub();
+    }
+
+    toggleSubHistory(): void {
+        this.subsHistoryIsOpen ? this.hideSubsHistory() : this.showSubsHistory();
     }
 
 
@@ -25,6 +36,7 @@ export default class SubtitleService {
         const style = `${selector}{display: inherit!important;}`
         this._addStyle(style, 'sub');
 
+        this.subIsOpen = true;
         this.hideSubsHistory();
     }
 
@@ -32,34 +44,28 @@ export default class SubtitleService {
         const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubSelector;
         const style = `${selector}{display: none!important;}`
         this._addStyle(style, 'sub');
+
+        this.subIsOpen = false;
+    }
+
+    showSubsHistory() {
+        const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
+        const style = `${selector}{display: inherit!important;}`
+        this._addStyle(style, 'sub-history');
+
+        this.subsHistoryIsOpen = true;
+        this.hideSub();
     }
 
     hideSubsHistory() {
         const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
         const style = `${selector}{display: none!important;}`
         this._addStyle(style, 'sub-history');
+
+        this.subsHistoryIsOpen = false;
     }
 
-    showSubsHistory() {
-        let newElForSub = this.htmlManager.getSubHistoryBlock();
-        newElForSub.childNodes.forEach(n => n.remove());
-
-        let index = 0;
-        for (const lastSub of this.subsHistory) {
-            let span = this.spanForHistory.cloneNode(false) as HTMLInputElement;
-            span.innerHTML = index === 0 ? lastSub : '<br>' + lastSub;
-            newElForSub.appendChild(span);
-            index++;
-        }
-
-        const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
-        const style = `${selector}{display: inherit!important;}`
-        this._addStyle(style, 'sub-history');
-
-        this.hideSub();
-    }
-
-    runObserver() {
+    _runObserver() {
         const callback = (mutationsList: MutationRecord[]) => {
             for (let mutation of mutationsList) {
                 const removedNodes = mutation.removedNodes[0] as HTMLInputElement;
@@ -74,6 +80,8 @@ export default class SubtitleService {
                         if (this.subsHistory.length > 4) {
                             this.subsHistory = this.subsHistory.slice(1, 5);
                         }
+
+                        this._renderHistory();
                     }
                 }
             }
@@ -85,6 +93,19 @@ export default class SubtitleService {
             childList: true,
             subtree: true
         });
+    }
+
+    _renderHistory() {
+        let newElForSub = this.htmlManager.getSubHistoryBlock();
+        newElForSub.childNodes.forEach(n => n.remove());
+
+        let index = 0;
+        for (const lastSub of this.subsHistory) {
+            let span = this.spanForHistory.cloneNode(false) as HTMLInputElement;
+            span.innerHTML = index === 0 ? lastSub : '<br>' + lastSub;
+            newElForSub.appendChild(span);
+            index++;
+        }
     }
 
     _addStyle(style: string, name: string, override: boolean = true) {
