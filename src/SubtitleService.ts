@@ -1,4 +1,3 @@
-import HtmlManagerI from "./HtmlManagers/Abstract/HtmlManagerI";
 import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
 
 export default class SubtitleService {
@@ -11,8 +10,9 @@ export default class SubtitleService {
 
     htmlManager: HtmlManagerAbstract;
 
-    constructor(htmlManager: HtmlManagerI) {
+    constructor(htmlManager: HtmlManagerAbstract) {
         this.htmlManager = htmlManager;
+        this.htmlManager.beforeInit();
         this.spanForHistory = htmlManager.getSpanForHistory();
         this.init();
     }

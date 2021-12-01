@@ -1,6 +1,5 @@
 import SubtitleService from "./SubtitleService";
 import HtmlManagerRezka from "./HtmlManagers/HtmlManagerRezka";
-import HtmlManagerI from "./HtmlManagers/Abstract/HtmlManagerI";
 import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
 import HtmlManagerNetflix from "./HtmlManagers/HtmlManagerNetflix";
 
@@ -35,7 +34,7 @@ document.onkeydown = function (e) {
 
 _waitForCondition(manager.hasSubBlock).then(() => {
     // @ts-ignore
-    const htmlManager: HtmlManagerI = new manager();
+    const htmlManager: HtmlManagerAbstract = new manager();
     subtitleService = new SubtitleService(htmlManager);
 });
 
