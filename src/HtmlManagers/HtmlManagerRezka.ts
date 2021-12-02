@@ -27,6 +27,7 @@ export default class HtmlManagerRezka implements HtmlManagerAbstract {
     addDivForSubsHistory(): HTMLInputElement {
         let newElForSub: HTMLInputElement = this.getBlockWithSub().cloneNode(false) as HTMLInputElement;
         newElForSub.style.zIndex = '9999';
+        newElForSub.style.userSelect = 'text';
         newElForSub.className = '';
         newElForSub.classList.add('div-for-subs');
         document.getElementById('oframecdnplayer')?.prepend(newElForSub);

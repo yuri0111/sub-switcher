@@ -21,6 +21,15 @@ export default class SubtitleService {
         this.htmlManager.addDivForSubsHistory();
         this.hideSubsHistory();
         this._runObserver();
+
+        const subHistoryEl = this.htmlManager.getSubHistoryBlock();
+        subHistoryEl.addEventListener('mousedown', (e) => {
+            if (e.button) {
+                // const selection = window.getSelection()?.toString();
+                //
+                // this._onSelectedClick(selection);
+            }
+        });
     }
 
     toggleSub(): void {
@@ -64,6 +73,30 @@ export default class SubtitleService {
         this._addStyle(style, 'sub-history');
 
         this.subsHistoryIsOpen = false;
+    }
+
+    _onSelectedClick(selectedText?: string) {
+        if (!selectedText) {
+            return;
+        }
+        this._translate(selectedText).then((data) => {
+            console.log(data);
+        });
+
+    }
+
+    async _translate(text: string) {
+        const res = await fetch("https://libretranslate.de/translate", {
+            method: "POST",
+            body: JSON.stringify({
+                q: text,
+                source: "en",
+                target: "ru"
+            }),
+            headers: {"Content-Type": "application/json"}
+        });
+
+        return await res.json();
     }
 
     _runObserver() {

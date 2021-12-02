@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import SubtitleService from "./SubtitleService";
 import HtmlManagerRezka from "./HtmlManagers/HtmlManagerRezka";
 import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
