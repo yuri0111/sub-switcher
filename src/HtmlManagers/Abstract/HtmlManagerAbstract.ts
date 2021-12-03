@@ -3,16 +3,21 @@ export default abstract class HtmlManagerAbstract{
     static hasSubBlock: () => boolean;
     static blockWithSubSelector: string;
     static blockWithSubHistorySelector: string;
+    static translatorModalSelector: string;
 
     abstract beforeInit(): void;
 
-    abstract getSubHistoryBlock(): HTMLInputElement;
+    abstract getSubHistoryBlock(): HTMLElement;
 
-    abstract getBlockWithSub(): HTMLInputElement;
+    abstract getBlockWithSub(): HTMLElement;
 
-    abstract getSpanForHistory(): HTMLInputElement;
+    abstract getSpanForHistory(): HTMLElement;
 
-    abstract addDivForSubsHistory(): HTMLInputElement;
+    abstract addDivForSubsHistory(): HTMLElement;
 
-    abstract parseSubs(el: HTMLInputElement): string;
+    abstract addTranslatorModal(): HTMLElement;
+
+    abstract getTranslatorModal(): HTMLElement;
+
+    abstract parseSubs(el: HTMLElement): string;
 }

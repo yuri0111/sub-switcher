@@ -3,10 +3,11 @@ import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
 export default class SubtitleService {
     subIsOpen: boolean = false;
     subsHistoryIsOpen: boolean = false;
+    translatorModalIsOpen: boolean = false;
 
     lastSubText?: string;
     subsHistory: string[] = [];
-    spanForHistory: HTMLInputElement;
+    spanForHistory: HTMLElement;
 
     htmlManager: HtmlManagerAbstract;
 
@@ -19,70 +20,71 @@ export default class SubtitleService {
 
     init() {
         this.htmlManager.addDivForSubsHistory();
-        this.hideSubsHistory();
+        this.htmlManager.addTranslatorModal();
         this._runObserver();
+        this._runSubHistoryTranslator();
+        this._changeVisibility('blockWithSubHistorySelector', false);
+        this._changeVisibility('translatorModalSelector', false);
+    }
 
+    toggleSub(): void {
+        this.subIsOpen = !this.subIsOpen;
+        this._changeVisibility('blockWithSubSelector', this.subIsOpen);
+
+        if(this.subIsOpen) {
+            this._changeVisibility('blockWithSubHistorySelector', false);
+            this.subsHistoryIsOpen = false;
+        }
+    }
+
+    toggleSubHistory(): void {
+        this.subsHistoryIsOpen = !this.subsHistoryIsOpen;
+        this._changeVisibility('blockWithSubHistorySelector', this.subsHistoryIsOpen);
+
+        if(this.subsHistoryIsOpen) {
+            this._changeVisibility('blockWithSubSelector', false);
+            this.subIsOpen = false;
+        }
+    }
+
+    toggleTransModal(): void {
+        this.translatorModalIsOpen = !this.translatorModalIsOpen;
+        this._changeVisibility('translatorModalSelector', this.translatorModalIsOpen);
+    }
+
+    _changeVisibility(selectorName: string, visible: boolean) {
+        const selector = Object.getPrototypeOf(this.htmlManager).constructor[selectorName];
+
+        const style = visible ?
+            `${selector}{display: inherit!important;}`:
+            `${selector}{display: none!important;}`;
+
+        this._addStyle(style, selectorName);
+    }
+    
+    _runSubHistoryTranslator() {
         const subHistoryEl = this.htmlManager.getSubHistoryBlock();
         subHistoryEl.addEventListener('mousedown', (e) => {
-            if (e.button) {
-                // const selection = window.getSelection()?.toString();
-                //
-                // this._onSelectedClick(selection);
+            if (e.button === 2) {
+                const selection = window.getSelection()?.toString();
+                this._onSelectedClick(selection);
             }
         });
     }
 
-    toggleSub(): void {
-        this.subIsOpen ? this.hideSub() : this.showSub();
-    }
+    async _onSelectedClick(selectedText?: string) {
+        this.toggleTransModal();
 
-    toggleSubHistory(): void {
-        this.subsHistoryIsOpen ? this.hideSubsHistory() : this.showSubsHistory();
-    }
-
-
-    showSub() {
-        const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubSelector;
-        const style = `${selector}{display: inherit!important;}`
-        this._addStyle(style, 'sub');
-
-        this.subIsOpen = true;
-        this.hideSubsHistory();
-    }
-
-    hideSub() {
-        const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubSelector;
-        const style = `${selector}{display: none!important;}`
-        this._addStyle(style, 'sub');
-
-        this.subIsOpen = false;
-    }
-
-    showSubsHistory() {
-        const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
-        const style = `${selector}{display: inherit!important;}`
-        this._addStyle(style, 'sub-history');
-
-        this.subsHistoryIsOpen = true;
-        this.hideSub();
-    }
-
-    hideSubsHistory() {
-        const selector = Object.getPrototypeOf(this.htmlManager).constructor.blockWithSubHistorySelector;
-        const style = `${selector}{display: none!important;}`
-        this._addStyle(style, 'sub-history');
-
-        this.subsHistoryIsOpen = false;
-    }
-
-    _onSelectedClick(selectedText?: string) {
         if (!selectedText) {
             return;
         }
-        this._translate(selectedText).then((data) => {
-            console.log(data);
-        });
+        
+        const res: string = (await this._translate(selectedText)).translatedText;
+        const elWithTrans = document.createElement("span");
+        elWithTrans.innerHTML = res;
 
+        this.htmlManager.getTranslatorModal().childNodes.forEach(n => n.remove());
+        this.htmlManager.getTranslatorModal().append(elWithTrans);
     }
 
     async _translate(text: string) {
@@ -102,7 +104,7 @@ export default class SubtitleService {
     _runObserver() {
         const callback = (mutationsList: MutationRecord[]) => {
             for (let mutation of mutationsList) {
-                const removedNodes = mutation.removedNodes[0] as HTMLInputElement;
+                const removedNodes = mutation.removedNodes[0] as HTMLElement;
 
                 if (mutation.type === 'childList' && removedNodes) {
                     let text = this.htmlManager.parseSubs(removedNodes);
@@ -135,7 +137,7 @@ export default class SubtitleService {
 
         let index = 0;
         for (const lastSub of this.subsHistory) {
-            let span = this.spanForHistory.cloneNode(false) as HTMLInputElement;
+            let span = this.spanForHistory.cloneNode(false) as HTMLElement;
             span.innerHTML = index === 0 ? lastSub : '<br>' + lastSub;
             newElForSub.appendChild(span);
             index++;
