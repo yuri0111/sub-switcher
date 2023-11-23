@@ -14,7 +14,7 @@
         "*://www.netflix.com/*"
       ],
       "js": [
-        "../src/index.ts"
+        "./src/index.ts"
       ]
     }
   ]

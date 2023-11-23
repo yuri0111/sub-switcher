@@ -5,8 +5,8 @@
   "author": "Yuri <zvozdjak.y@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "parcel watch public/manifest.json --host localhost --config @parcel/config-webextension --dist-dir public/dist",
-    "build": "parcel build public/manifest.json --config @parcel/config-webextension --dist-dir public/dist"
+    "start": "parcel watch manifest.json --host localhost --config @parcel/config-webextension --dist-dir dist-dev",
+    "build": "parcel build manifest.json --config @parcel/config-webextension --dist-dir dist-prod"
   },
   "dependencies": {},
   "devDependencies": {
