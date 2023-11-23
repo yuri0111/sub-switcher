@@ -1,6 +1,6 @@
 {
   "description": "Adds the ability to show, hide subtitles by pressing 'c' key. Additional you can show, hide sub history by pressing 'v' key",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Sub switcher",
   "version": "1.0",
   "homepage_url": "https://www.netflix.com/",
@@ -14,7 +14,7 @@
         "*://www.netflix.com/*"
       ],
       "js": [
-        "dist/index.js"
+        "../src/index.ts"
       ]
     }
   ]
