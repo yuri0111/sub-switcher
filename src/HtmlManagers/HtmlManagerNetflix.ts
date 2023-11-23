@@ -17,6 +17,10 @@ export default class HtmlManagerNetflix extends HtmlManagerAbstract {
 		const el = document.querySelector<HTMLElement>('.player-timedtext > .player-timedtext-text-container') as HTMLElement;
 		let newElForSub: HTMLElement = el.cloneNode(false) as HTMLElement;
 		newElForSub.style.zIndex = '9999';
+		newElForSub.style.userSelect = 'text';
+		newElForSub.style.width = '60%';
+		newElForSub.style.left = '20%';
+
 		newElForSub.classList.add('div-for-subs');
 		document.querySelector<HTMLElement>('.watch-video--player-view [data-uia="video-canvas"] > div > div')?.prepend(newElForSub);
 
@@ -40,7 +44,11 @@ export default class HtmlManagerNetflix extends HtmlManagerAbstract {
 		if (!res) {
 			throw new Error(' no result for getBlockWithSub');
 		}
-		return res.cloneNode(false) as HTMLElement;
+		let spanForSub: HTMLElement = res.cloneNode(false) as HTMLElement;
+		spanForSub.style.fontSize = '3em';
+		spanForSub.style.display = 'block';
+
+		return spanForSub;
 	}
 
 	getSubHistoryBlock(): HTMLElement {
