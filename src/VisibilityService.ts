@@ -3,7 +3,6 @@ import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
 export default class VisibilityService {
 	subIsOpen: boolean = false;
 	subsHistoryIsOpen: boolean = false;
-	translatorModalIsOpen: boolean = false;
 
 	htmlManager: HtmlManagerAbstract;
 
@@ -11,7 +10,6 @@ export default class VisibilityService {
 		this.htmlManager = htmlManager;
 
 		this.hideSubHistory();
-		this.hideTransModal();
 	}
 
 	toggleSub(): void {
@@ -20,10 +18,6 @@ export default class VisibilityService {
 
 	toggleSubHistory(): void {
 		this.subsHistoryIsOpen ? this.hideSubHistory() : this.showSubHistory();
-	}
-
-	toggleTransModal(): void {
-		this.translatorModalIsOpen ? this.hideTransModal() : this.showTransModal();
 	}
 
 	showSub(): void {
@@ -36,8 +30,6 @@ export default class VisibilityService {
 	hideSub(): void {
 		this._changeVisibility('blockWithSubSelector', false);
 		this.subIsOpen = false;
-
-		this.hideTransModal();
 	}
 
 	showSubHistory(): void {
@@ -50,18 +42,6 @@ export default class VisibilityService {
 	hideSubHistory(): void {
 		this._changeVisibility('blockWithSubHistorySelector', false);
 		this.subsHistoryIsOpen = false;
-
-		this.hideTransModal();
-	}
-
-	showTransModal(): void {
-		this._changeVisibility('translatorModalSelector', true);
-		this.translatorModalIsOpen = true;
-	}
-
-	hideTransModal(): void {
-		this._changeVisibility('translatorModalSelector', false);
-		this.translatorModalIsOpen = false;
 	}
 
 	_changeVisibility(selectorName: string, visible: boolean) {

@@ -2,7 +2,6 @@ export default abstract class HtmlManagerAbstract {
 	static hasSubBlock: () => boolean;
 	static blockWithSubSelector: string;
 	static blockWithSubHistorySelector: string;
-	static translatorModalSelector: string;
 
 	abstract beforeInit(): void;
 
@@ -14,9 +13,7 @@ export default abstract class HtmlManagerAbstract {
 
 	abstract addDivForSubsHistory(): HTMLElement;
 
-	abstract addTranslatorModal(): HTMLElement;
-
-	abstract getTranslatorModal(): HTMLElement;
-
-	abstract parseSubs(el: HTMLElement): string;
+	parseSubs(el: HTMLElement): string {
+		return el.outerHTML.replace('<br>', ' ').replace(/<\/?[^>]+(>|$)/g, '')
+	}
 }

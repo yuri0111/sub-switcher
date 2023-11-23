@@ -1,6 +1,5 @@
 import HtmlManagerAbstract from "./HtmlManagers/Abstract/HtmlManagerAbstract";
 import VisibilityService from "./VisibilityService";
-import TranslatorService from "./TranslatorService";
 import HistoryService from "./HistoryService";
 
 export default class SubtitleService {
@@ -15,10 +14,6 @@ export default class SubtitleService {
 
 		// history
 		new HistoryService(this.htmlManager);
-
-		// translator
-		const translatorService = new TranslatorService(this.htmlManager, this.visibilityService);
-		translatorService.runTranslator(this.htmlManager.getSubHistoryBlock());
 	}
 
 	toggleSub(): void {

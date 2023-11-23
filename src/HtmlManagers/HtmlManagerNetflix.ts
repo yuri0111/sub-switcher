@@ -1,10 +1,9 @@
 import HtmlManagerAbstract from "./Abstract/HtmlManagerAbstract";
 
-export default class HtmlManagerNetflix implements HtmlManagerAbstract {
+export default class HtmlManagerNetflix extends HtmlManagerAbstract {
 
 	static blockWithSubSelector = '.player-timedtext';
 	static blockWithSubHistorySelector = '.div-for-subs';
-	static translatorModalSelector = '.div-for-modal';
 
 	static hasSubBlock(): boolean {
 		const el = document.querySelector<HTMLElement>(HtmlManagerNetflix.blockWithSubSelector);
@@ -22,14 +21,6 @@ export default class HtmlManagerNetflix implements HtmlManagerAbstract {
 		document.querySelector<HTMLElement>('.watch-video--player-view [data-uia="video-canvas"] > div > div')?.prepend(newElForSub);
 
 		return newElForSub;
-	}
-
-	addTranslatorModal(): HTMLElement {
-		return new HTMLElement();
-	}
-
-	getTranslatorModal(): HTMLElement {
-		return new HTMLElement();
 	}
 
 	getBlockWithSub(): HTMLElement {

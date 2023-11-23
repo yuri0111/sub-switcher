@@ -1,9 +1,8 @@
 import HtmlManagerAbstract from "./Abstract/HtmlManagerAbstract";
 
-export default class HtmlManagerRezka implements HtmlManagerAbstract {
+export default class HtmlManagerRezka extends HtmlManagerAbstract {
 	static blockWithSubSelector = '#oframecdnplayer > pjsdiv.sub-block';
 	static blockWithSubHistorySelector = '#oframecdnplayer .div-for-subs';
-	static translatorModalSelector = '#oframecdnplayer .translator-modal';
 
 	static hasSubBlock(): boolean {
 		// noinspection CssInvalidHtmlTagReference
@@ -41,31 +40,6 @@ export default class HtmlManagerRezka implements HtmlManagerAbstract {
 		return newElForSub;
 	}
 
-	addTranslatorModal(): HTMLElement {
-		const newDiv = document.createElement("div");
-		newDiv.style.zIndex = '9999';
-		newDiv.style.position = 'absolute';
-		newDiv.style.left = '48%';
-		newDiv.style.top = '100px';
-		newDiv.style.textAlign = 'center';
-		newDiv.style.background = '#222';
-		newDiv.style.padding = '14px';
-
-		newDiv.className = 'translator-modal';
-		document.getElementById('oframecdnplayer')?.prepend(newDiv);
-
-		return newDiv;
-	}
-
-	getTranslatorModal(): HTMLElement {
-		const res = document.querySelector<HTMLElement>(HtmlManagerRezka.translatorModalSelector);
-
-		if (!res) {
-			throw new Error(' no result for getTranslatorModal');
-		}
-		return res;
-	}
-
 	getBlockWithSub(): HTMLElement {
 		const res = document.querySelector<HTMLElement>(HtmlManagerRezka.blockWithSubSelector);
 
@@ -92,9 +66,5 @@ export default class HtmlManagerRezka implements HtmlManagerAbstract {
 			throw new Error(' no result for getSubHistoryBlock');
 		}
 		return res;
-	}
-
-	parseSubs(el: HTMLElement): string {
-		return el.innerHTML.replace('<br>', ' ');
 	}
 }
